@@ -34,7 +34,10 @@ fi
 # shellcheck disable=SC1091
 . /etc/os-release
 DEBIANNAME="${VERSION_CODENAME}"
-module_root="/net/opt/modulefiles"
+#module_root="/net/opt/modulefiles"
+module_root="./modulefiles"
+#SPACK_ROOT="/net/opt/spack_ag_netz/spack_${DEBIANNAME}"
+SPACK_ROOT="/home/boerries18/GMX/spack"
 
 GROMACSVERSION="${1:-}"
 if [[ -z "$GROMACSVERSION" ]]; then
@@ -120,7 +123,7 @@ check_install_paths() {
     local architecture="$1"
     local hash="$2"
     local cuda_or_cpu="$3"
-    local install_root="/net/opt/spack_ag_netz/spack_${DEBIANNAME}/opt/spack/${architecture}/gromacs-${GROMACSVERSION}-${hash}"
+    local install_root="${SPACK_ROOT}/opt/spack/${architecture}/gromacs-${GROMACSVERSION}-${hash}"
     local variable relative_path
     local missing_paths=0
 
@@ -154,6 +157,7 @@ for cuda_or_cpu in cpu cuda; do
         -e "s@|VERSION|@${version_escaped}@g" \
         -e "s@|TIMESTAMP|@${timestamp_escaped}@g" \
         -e "s@|DEBIANNAME|@${debian_name_escaped}@g" \
+        -e "s@|SPACK_ROOT|@${SPACK_ROOT}@g" \
         "$module_file"
 
     if [[ "$cuda_or_cpu" == cuda ]]; then

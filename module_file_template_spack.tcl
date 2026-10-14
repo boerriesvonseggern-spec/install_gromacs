@@ -36,7 +36,7 @@ proc getArchHash {} {
   if {[regexp {vendor_id[[:space:]]*:[[:space:]]*AuthenticAMD} $cpuinfo] && \
       [regexp {cpu family[[:space:]]*:[[:space:]]*23([^0-9]|$)} $cpuinfo] && \
       [regexp {model[[:space:]]*:[[:space:]]*(4[89]|5[0-9]|6[0-3])([^0-9]|$)} $cpuinfo]} {
-    set gromacsPath "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/|ARCH4|/gromacs-|VERSION|-|HASH4|/bin"
+    set gromacsPath "|SPACK_ROOT|/opt/spack/|ARCH4|/gromacs-|VERSION|-|HASH4|/bin"
     if {[file isdirectory $gromacsPath]} {
       return [list "|ARCH4|" "|HASH4|"]
     }
@@ -48,7 +48,7 @@ proc getArchHash {} {
       [hasCpuFlag $cpuinfo avx512dq] && \
       [hasCpuFlag $cpuinfo avx512bw] && \
       [hasCpuFlag $cpuinfo avx512vl]} {
-    set gromacsPath "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/|ARCH3|/gromacs-|VERSION|-|HASH3|/bin"
+    set gromacsPath "|SPACK_ROOT|/opt/spack/|ARCH3|/gromacs-|VERSION|-|HASH3|/bin"
     if {[file isdirectory $gromacsPath]} {
       return [list "|ARCH3|" "|HASH3|"]
     }
@@ -56,14 +56,14 @@ proc getArchHash {} {
 
   # AVX2 is the baseline required by the Haswell build.
   if {[hasCpuFlag $cpuinfo avx2]} {
-    set gromacsPath "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/|ARCH2|/gromacs-|VERSION|-|HASH2|/bin"
+    set gromacsPath "|SPACK_ROOT|/opt/spack/|ARCH2|/gromacs-|VERSION|-|HASH2|/bin"
     if {[file isdirectory $gromacsPath]} {
       return [list "|ARCH2|" "|HASH2|"]
     }
   }
 
   # Ivy Bridge is the final fallback, but it must also be installed.
-  set gromacsPath "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/|ARCH1|/gromacs-|VERSION|-|HASH1|/bin"
+  set gromacsPath "|SPACK_ROOT|/opt/spack/|ARCH1|/gromacs-|VERSION|-|HASH1|/bin"
   if {[file isdirectory $gromacsPath]} {
     return [list "|ARCH1|" "|HASH1|"]
   }
@@ -76,7 +76,7 @@ set result [getArchHash]
 set ARCH [lindex $result 0]
 set HASH [lindex $result 1]
 
-prepend-path --delim ":" PATH "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/bin"
-prepend-path --delim ":" MANPATH "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/share/man"
-prepend-path --delim ":" PKG_CONFIG_PATH "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/lib/pkgconfig"
-prepend-path --delim ":" CMAKE_PREFIX_PATH "/net/opt/spack_ag_netz/spack_|DEBIANNAME|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/."
+prepend-path --delim ":" PATH "|SPACK_ROOT|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/bin"
+prepend-path --delim ":" MANPATH "|SPACK_ROOT|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/share/man"
+prepend-path --delim ":" PKG_CONFIG_PATH "|SPACK_ROOT|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/lib/pkgconfig"
+prepend-path --delim ":" CMAKE_PREFIX_PATH "|SPACK_ROOT|/opt/spack/$ARCH/gromacs-|VERSION|-$HASH/."

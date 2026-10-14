@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+N_JOBS=8
 # Install CPU-optimized GROMACS variants, with and without CUDA, through Spack.
 set -euo pipefail
 
@@ -15,6 +16,7 @@ fi
 
 # Arguments after GROMACSVERSION are additional constraints for every Spack spec.
 SPACK_INSTALL_ARGS=("${@:2}")
+
 
 if ! command -v spack >/dev/null 2>&1; then
     echo "spack must be available on PATH" >&2
@@ -57,9 +59,11 @@ for cuda_variant in ~cuda +cuda; do
     for build in AVX_256 AVX2_256 AVX_512 ZEN2; do
         architecture="${architectures[$build]}"
         build_name="${build}_${cuda_variant#+}"
+        command_args="gromacs@${GROMACSVERSION} ~~mpi ~~double ${cuda_variant} arch=${architecture} ${SPACK_INSTALL_ARGS[@]}"
         echo "Installing ${build_name}: gromacs@${GROMACSVERSION} ~~mpi ~~double ${cuda_variant} arch=${architecture}"
-
-        if spack install "gromacs@${GROMACSVERSION} ~~mpi ~~double ${cuda_variant} arch=${architecture}" "${SPACK_INSTALL_ARGS[@]}"; then
+        echo "Running: spack install $command_args"
+        echo " "
+        if spack install "-j ${N_JOBS}" "${command_args}"; then
             if hash="$(spack python -c 'import spack.store; r=max(spack.store.STORE.db.query("gromacs", installed=True), key=lambda s: spack.store.STORE.db.get_record(s).installation_time); print(r.dag_hash())')"; then
                 gromacs_hashes["$build_name"]="$hash"
                 printf '%s=%s\n' "$build_name" "$hash" >> "$hash_file"
