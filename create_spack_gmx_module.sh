@@ -37,7 +37,7 @@ DEBIANNAME="${VERSION_CODENAME}"
 #module_root="/net/opt/modulefiles"
 module_root="./modulefiles"
 #SPACK_ROOT="/net/opt/spack_ag_netz/spack_${DEBIANNAME}"
-SPACK_ROOT="/home/boerries18/GMX/spack"
+SPACK_ROOT="/net/storage/boerries18/spack"
 
 GROMACSVERSION="${1:-}"
 if [[ -z "$GROMACSVERSION" ]]; then

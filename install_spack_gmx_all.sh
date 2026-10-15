@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-N_JOBS=8
+N_JOBS=14
 # Install CPU-optimized GROMACS variants, with and without CUDA, through Spack.
 set -euo pipefail
 

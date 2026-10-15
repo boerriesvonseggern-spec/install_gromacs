@@ -5,6 +5,11 @@ Firstly, to get spack set up, go to the spack source directory and source the se
 # For bash/zsh/sh
 . spack/share/spack/setup-env.sh
 ```
+To set up the directory where spack will install the packages (this needs a lot of memory), copy the settings template ( https://spack.readthedocs.io/en/latest/config_yaml.html#config-yaml ) to etc/spack/site/config.yaml. 
+There, you can also enable cross-compilation using
+```
+spack config add concretizer:targets:host_compatible:false
+```
 In order to have plumed, it is necessary to modify the config such that spack thinks plumed is supported with the newest gromacs versions.
 To do this, modify the dictionary in the package.py file of gromacs
 ```
@@ -32,3 +37,8 @@ With this, run something along the lines of
 `bash create_spack_gmx_module.sh 2026.3`
 to set up the modulefiles.
 
+
+### Checklist - Installation Options
+
+ - Check spack config etc/spack/site/config.yaml to set install location
+ - install_spack_gmx_all.sh : Check SPACK_ROOT -> install location  and module_root -> module file folder
